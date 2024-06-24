@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: springboot-service
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/mySqlSpringBootDb?allowPublicKeyRetrieval=true&useSSL=false
+    username: root
+    password: 123
+  flyway:
+    enabled: true
+    baselineOnMigrate: false
+    validateOnMigrate: true
+    locations: classpath:db/migration
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui
+
