@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "sys_user_role")
+@Table(name = "T_SYS_ROLE")
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -24,6 +24,7 @@ public class Role {
     private ERole name;
 
     @ManyToMany(mappedBy = "roles")
+    @Builder.Default
     private Set<User> users = new HashSet<>();
 
     public Role(ERole name) {
