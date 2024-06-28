@@ -1,10 +1,14 @@
 package com.it.ntnhan.springboot.security.account;
 
+import com.it.ntnhan.springboot.general.validity.Validity;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.ManyToAny;
+import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.UuidGenerator;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -14,8 +18,8 @@ import java.util.Set;
 @AllArgsConstructor
 @Setter
 @Getter
-@Builder
-public class User {
+@SuperBuilder
+public class User extends Validity {
     @Id
     @UuidGenerator
     private String id;
@@ -26,8 +30,19 @@ public class User {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "is_enable", nullable = false)
-    private boolean enable;
+    @Column(name = "email", nullable = false)
+    private String email;
+
+    @Column(name = "is_enabled", nullable = false)
+    private boolean enabled;
+
+    @Column(name = "creation_time", nullable = false)
+    @CreationTimestamp
+    private LocalDateTime creationTime;
+
+    @Column(name = "modification_time")
+    @UpdateTimestamp
+    private LocalDateTime modificationTime;
 
     @ManyToMany
     @JoinTable(
