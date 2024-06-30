@@ -1,6 +1,7 @@
 package com.it.ntnhan.springboot.security;
 
 import com.it.ntnhan.springboot.security.account.User;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -12,6 +13,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,25 +33,15 @@ public class UserDetailsImpl implements UserDetails {
     private String email;
     private Collection<? extends GrantedAuthority> authorities;
     private boolean enabled;
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
+    private LocalDate validFrom;
+    private LocalDate validTo;
+    private LocalDateTime createdAt;
 
 
+    @Transactional
     public static UserDetailsImpl build(User user) {
-        List<GrantedAuthority> authorities = user.getRoles().stream()
+        List<GrantedAuthority> authorities = user.getRoles()
+                .stream()
                 .map(role -> new SimpleGrantedAuthority(role.getName().name()))
                 .collect(Collectors.toList());
 
@@ -59,6 +52,9 @@ public class UserDetailsImpl implements UserDetails {
                 .password(user.getPassword())
                 .authorities(authorities)
                 .enabled(user.isEnabled())
+                .validFrom(user.getValidFrom())
+                .validTo(user.getValidTo())
+                .createdAt(user.getCreationTime())
                 .build();
 
     }
