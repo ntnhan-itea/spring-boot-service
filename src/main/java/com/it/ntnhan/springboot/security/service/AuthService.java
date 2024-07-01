@@ -1,5 +1,6 @@
 package com.it.ntnhan.springboot.security.service;
 
+import com.it.ntnhan.springboot.exceptions.UserAlreadyExistsException;
 import com.it.ntnhan.springboot.security.UserDetailsImpl;
 import com.it.ntnhan.springboot.security.account.User;
 import com.it.ntnhan.springboot.security.account.repository.RoleRepository;
@@ -21,6 +22,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import static com.it.ntnhan.springboot.security.jwt.JwtUtils.TOKEN_KIND;
 
 @Service
 public class AuthService {
@@ -45,7 +48,7 @@ public class AuthService {
         Optional<User> userExisted = userRepository.findByUsernameOrEmail(requestDto.getUsername(), requestDto.getEmail());
 
         if(userExisted.isPresent()) {
-            throw new RuntimeException("Username or Email already existed");
+            throw new UserAlreadyExistsException("Username or Email already existed");
         }
 
         User user = User.builder()
@@ -79,7 +82,7 @@ public class AuthService {
                 .email(userDetails.getEmail())
                 .id(userDetails.getId())
                 .token(jwt)
-                .type("Bearer")
+                .type(TOKEN_KIND)
                 .roles(roles)
                 .build();
     }
